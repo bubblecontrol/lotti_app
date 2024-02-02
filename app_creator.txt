@@ -1,0 +1,3 @@
+pip install pyinstaller
+
+--onefile --windowed LottiCallerApp.py, GetCalls.py, FilterCallsPage.py, GetFeaturesPage.py 
