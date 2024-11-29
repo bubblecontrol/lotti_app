@@ -253,7 +253,7 @@ class GetCallsPage(Frame):
                                 contour_array = np.zeros_like(cleaned_spectrogram)
 
                                 for i in range(num_contours - 1):
-                                    contour_array[(cleaned_spectrogram >= contour_levels[i]) & (cleaned_spectrogram < contour_levels[i + 1])] = i
+                                    contour_array[(cleaned_spectrogram >= contour_levels[i]) & (cleaned_spectrogram <= contour_levels[i + 1])] = i
 
                                 sums = np.sum(contour_array, axis = 0)
 
