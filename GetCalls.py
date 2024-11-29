@@ -1,6 +1,5 @@
 import os
 import time
-import shutil
 import tkinter as tk
 from tkinter import Frame, StringVar, Label, Entry, Button, Toplevel, filedialog, messagebox, ttk, LabelFrame
 import pandas as pd

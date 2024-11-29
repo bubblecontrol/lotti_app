@@ -1,7 +1,6 @@
 import os
 from os import listdir
 from os.path import isfile, join
-import tkinter as tk
 from tkinter import filedialog, messagebox
 import numpy as np
 import pickle

@@ -1,8 +1,9 @@
-numpy
-librosa
-pandas
-noisereduce
-scikit-image
-matplotlib
-tqdm
-scipy
+numpy==2.0.2
+librosa==0.10.2.post1
+pandas==2.2.3
+noisereduce==3.0.3
+scikit-image==0.24.0
+matplotlib==3.9.2
+tqdm==4.67.1
+scipy==1.14.1
+pyinstaller
