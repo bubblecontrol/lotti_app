@@ -6,6 +6,3 @@ scikit-image
 matplotlib
 tqdm
 scipy
-torch
-tensorflow
-Pillow
