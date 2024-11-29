@@ -1,0 +1,6 @@
+.DS_Store
+LottiCallerApp.spec
+build
+dist
+venv
+env
