@@ -1,3 +1,14 @@
 pip install pyinstaller
 
---onefile --windowed LottiCallerApp.py, GetCalls.py, FilterCallsPage.py, GetFeaturesPage.py 
+#Create environment (if doesn't exist already).
+python -m venv env
+
+#Activate the environment if already created.
+env\Scripts\activate
+
+#Install the packages from the requirements text file.
+pip install -r requirements.txt
+
+#Install the app.
+pyinstaller --optimize 2 --onefile --windowed LottiCallerApp.py GetCalls.py FilterCallsPage.py
+ 

@@ -180,15 +180,47 @@ class GetCallsPage(Frame):
 
             # these are the functions to extract the tweep from a Lotti churr call  
     def get_tweep(self, call, folder_path, start, call_id, selec):
+                                #AJ librosa.load parameters are as follows:
+                                    #offset - start reading after this time in seconds
+                                    #duration - only load up to this much audio in seconds
+                                    #sr - target sampling rate
                                 y, sr = librosa.load(folder_path + call, offset = start, duration = 0.6, sr = 48000)
 
-                                ## Noisereduce 
-                                y = nr.reduce_noise(y=y, sr=sr, thresh_n_mult_nonstationary = 12,  n_fft = 512)
+
+                                ## Noisereduce
+                                #AJ Switched n_fft from 512 to 768 (1.5 x original value)
+                                # nr.reduce_noise reduces noise in bioacoustics using a method called spectral gating. The 
+                                # parameters are as follows:
+                                    # thresh_n_mult_nonstationary: Non-stationary Noise Reduction: Continuously updates the 
+                                    # estimated noise threshold over time. Default argument is 1.
+                                    # n_fft: int, optional length of the windowed signal after padding with zeros. 
+                                    # The number of rows in the STFT matrix ``D`` is ``(1 + n_fft/2)``. 
+                                    # The default value, ``n_fft=2048`` samples, corresponds to a physical 
+                                    # duration of 93 milliseconds at a sample rate of 22050 Hz. 
+                                    # This value is well adapted for music signals. However, in speech processing, 
+                                    # the recommended value is 512, corresponding to 23 milliseconds at a sample rate of 22050 Hz. 
+                                    # In any case, we recommend setting ``n_fft`` to a power of two for 
+                                    # optimizing the speed of the fast Fourier transform (FFT) algorithm., by default 1024
+                                y = nr.reduce_noise(y=y, sr=sr, thresh_n_mult_nonstationary = 12,  n_fft = 768)
 
                                 # Compute the Mel spectrogram
-                                S = librosa.feature.melspectrogram(y = y, sr=sr, n_fft=512, hop_length=16, n_mels=128, fmin=2000, fmax=11000)
+                                #AJ Switched n_fft from 512 to 768 (1.5 x original value)
+                                #AJ changed 2000 to 5000)
+                                #
+                                    # computing a mel spectrogram using a time-series input
+                                    # sr = sampling rate
+                                    # hop_length: number of samples between successive frames.
+                                    # center: If True, the signal y is padded so that frame D[:, t] is centered at y[t * hop_length].
+                                    # n_mels:number of Mel bands to generate, 
+                                    # fmin: lowest frequency (in Hz) 
+                                    # fmax: highest frequency (in Hz)
+                                S = librosa.feature.melspectrogram(y = y, sr=sr, n_fft=768, hop_length=16, n_mels=128, fmin=5000, fmax=11000)
 
                                 # Convert to magnitude spectrogram (dB)
+                                #AJ
+                                    #Convert an amplitude spectrogram to dB-scaled spectrogram
+                                    # ref = If scalar, the amplitude abs(S) is scaled relative to ref: 20 * log10(S / ref).
+                                    # Zeros in the output correspond to positions where S == ref.
                                 S_dB = librosa.amplitude_to_db(S, ref=np.max)
 
                                 # Normalize the array to the range [0, 1]
@@ -260,16 +292,19 @@ class GetCallsPage(Frame):
 
                                 # ensure that there is no failure by creating a fail safe if no peaks are detected
                                 if len(peaks) > 0:
-                                        call_start = np.min(peaks[0]-15) # give a little bit of space before the call
+                                        call_start = np.min(peaks[0]-50) # give a little bit of space before the call
+                                        # AJ increased the amount of space from 15 to 50
                                 else:
                                         call_start = 1
 
                                 # get the time of the start
+                                    # Convert frame counts to time (seconds).
                                 start_time = librosa.frames_to_time(call_start, sr = sr, hop_length = 16)
-                                end_times = start_time + 0.1
+                                #AJ increased this from 0.1 to + 0.11
+                                end_times = start_time + 0.11
                                 end_frames = librosa.time_to_frames(end_times, sr = sr, hop_length = 16)
 
-                                # Select the section of the Mel spectrogram corresponding to x and x + 200ms
+                                # Select the section of the Mel spectrogram corresponding to x and x + 200ms (AJ changed not sure about new value)
                                 S_dB_section = contour_array[: , call_start:end_frames]
                                 
                                 call_id = f'{call_id}_{selec}'
@@ -312,7 +347,9 @@ class GetCallsPage(Frame):
 
                     for i, img in enumerate(images):
                         sanitized_filename = re.sub(r'[<>:"/\\|?*]', '', filenames[i])
-                        plt.figure(figsize=(10, 5))
+                        #AJ is this potentially where the plot dimensions are set? C
+                        #Changed figsize = (10,5) to (5,5)
+                        plt.figure(figsize=(5, 5))
                         plt.imshow(img, origin='lower', aspect='auto', cmap='gray_r')
                         plt.xlabel('Time (frames)')
                         plt.ylabel('Frequency (Hz)')
