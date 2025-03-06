@@ -186,7 +186,6 @@ class GetCallsPage(Frame):
                                     #sr - target sampling rate
                                 y, sr = librosa.load(folder_path + call, offset = start, duration = 0.6, sr = 48000)
 
-
                                 ## Noisereduce
                                 #AJ Switched n_fft from 512 to 768 (1.5 x original value)
                                 # nr.reduce_noise reduces noise in bioacoustics using a method called spectral gating. The 
@@ -205,7 +204,7 @@ class GetCallsPage(Frame):
 
                                 # Compute the Mel spectrogram
                                 #AJ Switched n_fft from 512 to 768 (1.5 x original value)
-                                #AJ changed 2000 to 5000)
+                                #AJ changed fmin 2000 to 5000)
                                 #
                                     # computing a mel spectrogram using a time-series input
                                     # sr = sampling rate
